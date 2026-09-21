@@ -48,3 +48,25 @@ There's no automation — this is a manual, monthly pass:
 4. Hand-edit `index.html` to reflect any changed headline numbers, the top-sites
    selection, and the receipts list, and bump the `updated` date in both files.
 5. Commit and push — GitHub Pages redeploys automatically.
+
+## GPU Price Index (`/gpu/`)
+
+A second, independent page — a static snapshot of GPU rental prices, served at
+**aidc.datacap.xyz/gpu/**.
+
+- `gpu/data.json` — the selected snapshot records (model, 44-day change, offer
+  count, median/min $/hr, dlperf/$).
+- `gpu/index.html` — a standalone static page rendered from `gpu/data.json` by
+  hand. No build step, no framework, no runtime fetch.
+
+**Refresh is manual, not automated.** The underlying snapshot is derived from a
+private internal tracker; this public repo only ever holds a hand-picked,
+public-safe export of it. There is no script or CI job that pulls new data in.
+To refresh:
+
+1. Re-derive the latest snapshot values from the private source.
+2. Update `gpu/data.json` with the new per-model records and snapshot metadata.
+3. Hand-edit `gpu/index.html` — the table, the key-takeaways card, and the
+   snapshot timestamp — to match. Keep the two files consistent with each
+   other.
+4. Commit and push together. Do not update one file without the other.
