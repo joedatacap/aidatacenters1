@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GPU Price Index — aidc.datacap.xyz</title>
+<meta name="description" content="A public snapshot of GPU rental prices from Vast.ai's public offers API — median and minimum $/hr per model, with 44-day trend.">
+<style>
+  :root {
+    --bg: #0a0e14;
+    --surface: #12181f;
+    --surface-2: #161d26;
+    --line: #232b36;
+    --ink: #e6edf3;
+    --muted: #8b98a5;
+    --accent: #5b9dff;
+    --up: #fb7185;
+    --down: #34d399;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.55;
+  }
+  a { color: var(--accent); }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 1.25rem 4rem; }
+  header.top {
+    background: linear-gradient(180deg, #10151d, var(--bg));
+    border-bottom: 1px solid var(--line);
+    padding: 3rem 1.25rem 2.25rem;
+  }
+  header.top .wrap { padding: 0; }
+  header.top h1 { margin: 0 0 .5rem; font-size: 1.9rem; letter-spacing: -0.01em; }
+  header.top p.tag { margin: 0; color: var(--muted); max-width: 700px; font-size: 1rem; }
+  .meta {
+    color: var(--muted);
+    font-size: .82rem;
+    margin: 1.1rem 0 0;
+  }
+  .meta b { color: var(--ink); }
+  .meta a { color: var(--accent); text-decoration: none; }
+  .meta a:hover { text-decoration: underline; }
+
+  h2 { font-size: 1.25rem; margin: 2.5rem 0 1rem; letter-spacing: -0.005em; }
+  h2 .sub { display: block; font-size: .78rem; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); font-weight: 600; margin-bottom: .3rem; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 1.4rem 1.6rem;
+  }
+  .card h3 { margin: 0 0 .6rem; font-size: 1rem; }
+  .card ul { margin: 0; padding-left: 1.2rem; }
+  .card li { margin: .3rem 0; font-size: .89rem; color: var(--muted); }
+  .card li b { color: var(--ink); }
+
+  .tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; -webkit-overflow-scrolling: touch; }
+  table { width: 100%; border-collapse: collapse; background: var(--surface); font-size: .87rem; min-width: 620px; }
+  th { background: var(--surface-2); text-align: right; padding: .7rem .9rem; font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); border-bottom: 1px solid var(--line); }
+  th:first-child, td:first-child { text-align: left; }
+  td { padding: .65rem .9rem; border-top: 1px solid var(--line); text-align: right; font-variant-numeric: tabular-nums; }
+  td.model { font-weight: 600; text-align: left; }
+  .up { color: var(--up); }
+  .down { color: var(--down); }
+  .dim { color: var(--muted); }
+
+  .method p { margin: 0 0 .9rem; color: var(--muted); font-size: .89rem; }
+  .method p:last-child { margin-bottom: 0; }
+  .method strong { color: var(--ink); }
+
+  .limits {
+    background: rgba(251,113,133,.06);
+    border: 1px solid rgba(251,113,133,.25);
+    border-left: 3px solid var(--up);
+    border-radius: 0 10px 10px 0;
+    padding: 1rem 1.3rem;
+    font-size: .87rem;
+    color: #f0d3d7;
+  }
+  .limits b { color: #ffe4e6; }
+
+  .back { display: inline-block; margin-top: 2rem; font-size: .9rem; color: var(--muted); text-decoration: none; }
+  .back:hover { color: var(--accent); }
+
+  .foot {
+    color: var(--muted);
+    font-size: .8rem;
+    text-align: center;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+  }
+
+  @media (max-width: 600px) {
+    header.top h1 { font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <h1>GPU Price Index</h1>
+    <p class="tag">A public, hand-refreshed snapshot of GPU rental prices — median and minimum $/hr per model, plus 44-day price trend and a rough compute-value score, drawn from Vast.ai's public on-demand marketplace offers.</p>
+    <div class="meta">Snapshot: <b>2026-09-21 10:00 UTC</b> · source: <b>Vast.ai</b> (public offers API) · window: <b>44 days</b> (2026-08-08 → 2026-09-21) · source of record: <a href="data.json">data.json</a></div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <h2><span class="sub">Selected, not exhaustive</span>Median $/hr by GPU model</h2>
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>Model</th><th>Δ 44d</th><th>Offers</th><th>Median $/hr</th><th>Min $/hr</th><th>dlperf/$</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="model">H200</td><td class="up">▲+0.0%</td><td>2</td><td>$2.964</td><td>$2.633</td><td>147</td></tr>
+        <tr><td class="model">H100 NVL</td><td class="up">▲+64.0%</td><td>2</td><td>$2.189</td><td>$1.976</td><td>174</td></tr>
+        <tr><td class="model">H100 SXM</td><td class="down">▼0.0%</td><td>2</td><td>$1.468</td><td>$1.468</td><td>361</td></tr>
+        <tr><td class="model">RTX PRO 6000 S</td><td class="up">▲+5.6%</td><td>4</td><td>$1.270</td><td>$1.134</td><td>337</td></tr>
+        <tr><td class="model">RTX PRO 6000 Max-Q</td><td class="down">▼7.6%</td><td>4</td><td>$1.086</td><td>$0.801</td><td>350</td></tr>
+        <tr><td class="model">RTX PRO 5000</td><td class="up">▲+1.9%</td><td>1</td><td>$0.670</td><td>$0.670</td><td>284</td></tr>
+        <tr><td class="model">RTX 5090</td><td class="up">▲+22.9%</td><td>11</td><td>$0.414</td><td>$0.213</td><td>481</td></tr>
+        <tr><td class="model">RTX 6000Ada</td><td class="dim">new</td><td>3</td><td>$0.344</td><td>$0.342</td><td>330</td></tr>
+        <tr><td class="model">RTX PRO 4500</td><td class="down">▼0.0%</td><td>1</td><td>$0.336</td><td>$0.336</td><td>287</td></tr>
+        <tr><td class="model">A100 PCIE</td><td class="down">▼0.0%</td><td>1</td><td>$0.268</td><td>$0.268</td><td>322</td></tr>
+        <tr><td class="model">RTX PRO 4000</td><td class="down">▼32.1%</td><td>1</td><td>$0.146</td><td>$0.146</td><td>900</td></tr>
+        <tr><td class="model">RTX 5080</td><td class="up">▲+0.5%</td><td>3</td><td>$0.135</td><td>$0.134</td><td>621</td></tr>
+        <tr><td class="model">RTX 4090</td><td class="down">▼33.1%</td><td>3</td><td>$0.121</td><td>$0.121</td><td>664</td></tr>
+        <tr><td class="model">RTX 5070 Ti</td><td class="down">▼9.8%</td><td>3</td><td>$0.109</td><td>$0.108</td><td>697</td></tr>
+        <tr><td class="model">RTX 4090D</td><td class="down">▼33.3%</td><td>4</td><td>$0.107</td><td>$0.107</td><td>2,243</td></tr>
+        <tr><td class="model">RTX 5070</td><td class="down">▼11.2%</td><td>2</td><td>$0.088</td><td>$0.067</td><td>839</td></tr>
+        <tr><td class="model">RTX 5060 Ti</td><td class="down">▼12.9%</td><td>4</td><td>$0.057</td><td>$0.054</td><td>1,018</td></tr>
+        <tr><td class="model">Tesla V100</td><td class="up">▲+2.6%</td><td>9</td><td>$0.028</td><td>$0.027</td><td>1,851</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2><span class="sub">The numbers that matter</span>Key takeaways</h2>
+  <div class="card">
+    <ul>
+      <li><b>H200</b> is the priciest tracked model at <b>$2.964/hr</b> median; <b>Tesla V100</b> is the cheapest at <b>$0.028/hr</b>.</li>
+      <li><b>H100 NVL</b> saw the sharpest price rise over the window, up <b>+64.0%</b> (from $1.335/hr on 2026-08-08 to $2.189/hr on 2026-09-21).</li>
+      <li><b>RTX 4090D</b> fell the most, down <b>-33.3%</b>, and posts the best compute value in this set at <b>2,243 dlperf/$</b>.</li>
+      <li>18 models shown, backed by <b>60 live offers</b> across them at snapshot time; some tiers (single-offer, e.g. A100 PCIE) are thin markets and noisier than the rest.</li>
+    </ul>
+  </div>
+
+  <h2><span class="sub">How this is built</span>Methodology</h2>
+  <div class="card method">
+    <p>Prices are <strong>median asking rents</strong> per GPU-hour on Vast.ai's on-demand market — actual listed offers, not a fixed price list. <strong>Δ 44d</strong> is the percent change in median $/hr from the first to the most recent recorded snapshot for that model in the tracked window; <strong>new</strong> means only one snapshot exists so far, so no comparison is possible.</p>
+    <p><strong>dlperf/$</strong> is Vast.ai's own deep-learning-performance score divided by price — a higher number means more compute per dollar, not more raw performance.</p>
+    <p>This table shows 18 of 22 tracked models. Four low-signal, single-offer tiers that duplicate an adjacent model's price band (RTX PRO 6000 WS, RTX 4080S, RTX 4070S Ti, RTX 3080 Ti) were left out to keep the table readable; their data still exists upstream. Vast.ai itself already excludes very low offer counts from its own reporting for statistical sanity.</p>
+  </div>
+
+  <h2><span class="sub">Read before you cite</span>Limitations</h2>
+  <div class="limits">
+    <b>This is a manually captured snapshot, not a live feed.</b> It reflects one point in time (2026-09-21 10:00 UTC) pulled from a private internal tracker and republished here by hand — there is no automated refresh in this public repository. Several models trade on very thin markets (as few as 1-2 live offers), so their median/min prices can be noisy and unrepresentative of a deeper market. Vast.ai is one marketplace among several (Lambda, RunPod, CoreWeave, etc.) and its prices should not be read as the market-clearing rate everywhere.
+  </div>
+
+  <div class="foot">
+    Data: Vast.ai public offers API · snapshot 2026-09-21 10:00 UTC · source of record: <a href="data.json">data.json</a>
+  </div>
+
+  <a class="back" href="/">← back to aidc.datacap.xyz</a>
+
+</div>
+
+</body>
+</html>
