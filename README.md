@@ -70,3 +70,7 @@ To refresh:
    snapshot timestamp — to match. Keep the two files consistent with each
    other.
 4. Commit and push together. Do not update one file without the other.
+
+## Stage map (`/`)
+
+The root page includes a static, interactive stage map of the named sites in the ledger. Its pin positions, stage, and disclosed MW values are hand-rendered from `data.json`; it makes no map-API or network request. When refreshing the ledger, update the map pin/data payload and verify the named-site count, the undisclosed-site note, stage colors, and the selected-pin panel before publishing.
