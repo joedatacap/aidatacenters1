@@ -34,7 +34,11 @@ class TagBalance(HTMLParser):
 
 
 def section(html, marker_id):
-    m = re.search(rf'<div class="tbl-wrap" id="{marker_id}">(.*?</table>)\s*</div>', html, flags=re.S)
+    m = re.search(
+        rf'<div class="tbl-wrap" id="{marker_id}">(.*?</table>)(?:\s*<div class="table-asof">.*?</div>)?\s*</div>',
+        html,
+        flags=re.S,
+    )
     assert m, marker_id
     return m.group(1)
 
@@ -184,6 +188,7 @@ def main():
     for required in (
         '<title>GPU Rental Market Monitor',
         'Comparable provider snapshot',
+        'Vast.ai median (verified, 1× GPU)',
         'How to read the snapshot',
         'Vast marketplace detail',
         'Methodology / limitations',
