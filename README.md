@@ -74,3 +74,32 @@ To refresh:
 ## Stage map (`/`)
 
 The root page includes a static, interactive stage map of the named sites in the ledger. Its pin positions, stage, and disclosed MW values are hand-rendered from `data.json`; it makes no map-API or network request. When refreshing the ledger, update the map pin/data payload and verify the named-site count, the undisclosed-site note, stage colors, and the selected-pin panel before publishing.
+
+## Social card (`assets/aidc-social-card.png`)
+
+`assets/aidc-social-card.html` is the self-contained (no framework, no external
+image/map dependency), fixed 1200x630 source for the Open Graph / Twitter card
+image referenced in `index.html`'s `<head>`. It hand-codes the same headline
+numbers as the ledger (sites tracked, announced capex, delivered %) plus a
+restrained abstract US stage-map motif in the site's stage colors.
+
+**Regenerate the PNG whenever a headline number changes** (sites tracked,
+announced capex, delivered %) or the stage-map motif goes stale relative to
+`data.json`:
+
+1. Hand-edit the stat values (and map dots, if warranted) in
+   `assets/aidc-social-card.html` to match the updated `data.json`.
+2. Render it to `assets/aidc-social-card.png` at exactly 1200x630 — e.g. with
+   Playwright:
+   ```
+   python3 -c "
+   from playwright.sync_api import sync_playwright
+   with sync_playwright() as p:
+       b = p.chromium.launch()
+       page = b.new_page(viewport={'width':1200,'height':630}, device_scale_factor=1)
+       page.goto('file://' + __import__('os').path.abspath('assets/aidc-social-card.html'))
+       page.screenshot(path='assets/aidc-social-card.png')
+       b.close()
+   "
+   ```
+3. Confirm the output is still 1200x630 and commit both files together.
