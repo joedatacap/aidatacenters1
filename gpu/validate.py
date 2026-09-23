@@ -46,9 +46,21 @@ def main():
     for gpu in gpus:
         assert 'days_observed' in gpu
         assert 'change_since_first_observation_pct_text' in gpu
-        assert f'<td class="model">{gpu["model"]}</td>' in html
-        assert f'${gpu["median_usd_per_hr"]:.3f}' in html
-        assert f'${gpu["min_usd_per_hr"]:.3f}' in html
+        row_match = re.search(
+            rf'<tr><td class="model">{re.escape(gpu["model"])}</td>(.*?)</tr>',
+            html,
+            flags=re.S,
+        )
+        assert row_match, gpu['model']
+        row = row_match.group(0)
+        displayed_change = gpu['change_since_first_observation_pct_text'].removeprefix('— ')
+        displayed_days = 'n/a' if gpu['days_observed'] is None else str(gpu['days_observed'])
+        assert f'<td class="{gpu["change_direction"]}">{displayed_change}</td>' in row
+        assert f'<td>{displayed_days}</td>' in row
+        assert f'<td>{gpu["offers"]}' in row
+        assert f'${gpu["median_usd_per_hr"]:.3f}' in row
+        assert f'${gpu["min_usd_per_hr"]:.3f}' in row
+        assert f'>{gpu["dlperf_per_dollar"]:,}</td>' in row
 
     balance = TagBalance()
     balance.feed(html)
@@ -56,6 +68,7 @@ def main():
 
     for required in (
         'Median listed offer $/hr by GPU model',
+        'A hand-refreshed snapshot of Vast.ai on-demand listings:',
         'Change since first observation',
         'Days observed',
         'data-snapshot="2026-09-21T10:00:00Z"',
@@ -69,6 +82,8 @@ def main():
         'actual market clearing',
         'Vast.ai itself already excludes',
         'Δ 44d',
+        'GPU rental prices from Vast.ai',
+        'with 44-day trend',
     ):
         assert forbidden not in html, forbidden
     assert len(re.findall(r'>thin</span>', html)) == 16

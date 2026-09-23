@@ -51,7 +51,7 @@ There's no automation — this is a manual, monthly pass:
 
 ## GPU Price Index (`/gpu/`)
 
-A second, independent page: a static snapshot of GPU rental prices at
+A second, independent page: a static snapshot of Vast.ai on-demand listings at
 **aidc.datacap.xyz/gpu/**.
 
 - `gpu/data.json` records listed-offer median/minimum $/hr, offer count, days
