@@ -51,25 +51,37 @@ There's no automation — this is a manual, monthly pass:
 
 ## GPU Price Index (`/gpu/`)
 
-A second, independent page — a static snapshot of GPU rental prices, served at
+A second, independent page: a static snapshot of Vast.ai on-demand listings at
 **aidc.datacap.xyz/gpu/**.
 
-- `gpu/data.json` — the selected snapshot records (model, 44-day change, offer
-  count, median/min $/hr, dlperf/$).
-- `gpu/index.html` — a standalone static page rendered from `gpu/data.json` by
-  hand. No build step, no framework, no runtime fetch.
+- `gpu/data.json` records listed-offer median/minimum $/hr, offer count, days
+  observed, and change since first observation. It also carries explicit
+  normalization, reproducibility, and thin-market limits.
+- `gpu/index.html` is a standalone static page. A small local script only
+  calculates the visible freshness badge; it makes no provider fetch.
+- `gpu/validate.py` checks JSON validity, table/data correspondence, 18 records,
+  60 offers, the 16 thin-market rows, HTML nesting, and the current methodology
+  claims. Run it before every publish.
 
 **Refresh is manual, not automated.** The underlying snapshot is derived from a
-private internal tracker; this public repo only ever holds a hand-picked,
-public-safe export of it. There is no script or CI job that pulls new data in.
-To refresh:
+private internal tracker; this repo holds a public-safe export. There is no
+script or CI job that pulls fresh provider data. To refresh:
 
-1. Re-derive the latest snapshot values from the private source.
-2. Update `gpu/data.json` with the new per-model records and snapshot metadata.
-3. Hand-edit `gpu/index.html` — the table, the key-takeaways card, and the
-   snapshot timestamp — to match. Keep the two files consistent with each
-   other.
-4. Commit and push together. Do not update one file without the other.
+1. Re-derive the latest values from the private source and retain a normalized,
+   append-only raw offer snapshot outside this public repo when possible.
+2. Update `gpu/data.json` with the new records, exact observation dates, source
+   metadata, and the current normalization/reproducibility statement.
+3. Update `gpu/index.html` so its table, takeaways, snapshot timestamp, and
+   `data-snapshot` freshness attribute match the export.
+4. Run `python3 gpu/validate.py` from the repository root, then commit and push
+   the changed files together.
+
+**Second-provider policy.** Do not blend Vast.ai marketplace offers with a
+fixed-price provider into one median. If a second source is added, publish a
+separate, clearly labelled provider panel with its own source URL, configuration,
+price unit, capture time, and comparable GPU cohort. Start with a small RunPod
+on-demand reference set only after its data contract is documented and
+reproducible.
 
 ## Stage map (`/`)
 

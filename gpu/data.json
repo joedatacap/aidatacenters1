@@ -1,12 +1,11 @@
 {
   "snapshot_utc": "2026-09-21T10:00:00Z",
   "source": "Vast.ai public offers API",
-  "source_url": "https://vast.ai",
-  "window_days": 44,
+  "source_url": "https://docs.vast.ai/api-reference/search/search-offers",
   "window_start": "2026-08-08",
   "window_end": "2026-09-21",
   "total_snapshots_in_window": 92,
-  "selection_note": "18 of 22 tracked GPU models shown; 4 low-signal single-offer duplicate tiers omitted for readability (RTX PRO 6000 WS, RTX 4080S, RTX 4070S Ti, RTX 3080 Ti). Low-offer-count models are already excluded upstream for statistical sanity.",
+  "selection_note": "18 of 22 tracked GPU models shown; 4 single-offer tiers omitted for readability (RTX PRO 6000 WS, RTX 4080S, RTX 4070S Ti, RTX 3080 Ti). Rows below 5 offers are thin-market observations and are not used for headline rankings.",
   "gpus": [
     {
       "model": "H200",
@@ -14,12 +13,13 @@
       "min_usd_per_hr": 2.633,
       "offers": 2,
       "dlperf_per_dollar": 147,
-      "change_44d_pct_text": "\u25b2+0.0%",
-      "change_direction": "up",
+      "change_direction": "flat",
       "history_first_date": "2026-08-18",
       "history_first_median_usd_per_hr": 2.963,
       "history_last_date": "2026-09-21",
-      "history_last_median_usd_per_hr": 2.964
+      "history_last_median_usd_per_hr": 2.964,
+      "days_observed": 34,
+      "change_since_first_observation_pct_text": "\u2014 0.0%"
     },
     {
       "model": "H100 NVL",
@@ -27,12 +27,13 @@
       "min_usd_per_hr": 1.976,
       "offers": 2,
       "dlperf_per_dollar": 174,
-      "change_44d_pct_text": "\u25b2+64.0%",
       "change_direction": "up",
       "history_first_date": "2026-08-08",
       "history_first_median_usd_per_hr": 1.335,
       "history_last_date": "2026-09-21",
-      "history_last_median_usd_per_hr": 2.189
+      "history_last_median_usd_per_hr": 2.189,
+      "days_observed": 44,
+      "change_since_first_observation_pct_text": "\u25b2+64.0%"
     },
     {
       "model": "H100 SXM",
@@ -40,12 +41,13 @@
       "min_usd_per_hr": 1.468,
       "offers": 2,
       "dlperf_per_dollar": 361,
-      "change_44d_pct_text": "\u25bc0.0%",
-      "change_direction": "down",
+      "change_direction": "flat",
       "history_first_date": "2026-08-08",
       "history_first_median_usd_per_hr": 1.468,
       "history_last_date": "2026-09-21",
-      "history_last_median_usd_per_hr": 1.468
+      "history_last_median_usd_per_hr": 1.468,
+      "days_observed": 44,
+      "change_since_first_observation_pct_text": "\u2014 0.0%"
     },
     {
       "model": "RTX PRO 6000 S",
@@ -53,12 +55,13 @@
       "min_usd_per_hr": 1.134,
       "offers": 4,
       "dlperf_per_dollar": 337,
-      "change_44d_pct_text": "\u25b2+5.6%",
       "change_direction": "up",
       "history_first_date": "2026-08-08",
       "history_first_median_usd_per_hr": 1.202,
       "history_last_date": "2026-09-21",
-      "history_last_median_usd_per_hr": 1.27
+      "history_last_median_usd_per_hr": 1.27,
+      "days_observed": 44,
+      "change_since_first_observation_pct_text": "\u25b2+5.6%"
     },
     {
       "model": "RTX PRO 6000 Max-Q",
@@ -66,12 +69,13 @@
       "min_usd_per_hr": 0.801,
       "offers": 4,
       "dlperf_per_dollar": 350,
-      "change_44d_pct_text": "\u25bc7.6%",
       "change_direction": "down",
       "history_first_date": "2026-08-29",
       "history_first_median_usd_per_hr": 1.175,
       "history_last_date": "2026-09-21",
-      "history_last_median_usd_per_hr": 1.086
+      "history_last_median_usd_per_hr": 1.086,
+      "days_observed": 23,
+      "change_since_first_observation_pct_text": "\u25bc7.6%"
     },
     {
       "model": "RTX PRO 5000",
@@ -79,12 +83,13 @@
       "min_usd_per_hr": 0.67,
       "offers": 1,
       "dlperf_per_dollar": 284,
-      "change_44d_pct_text": "\u25b2+1.9%",
       "change_direction": "up",
       "history_first_date": "2026-08-08",
       "history_first_median_usd_per_hr": 0.657,
       "history_last_date": "2026-09-21",
-      "history_last_median_usd_per_hr": 0.67
+      "history_last_median_usd_per_hr": 0.67,
+      "days_observed": 44,
+      "change_since_first_observation_pct_text": "\u25b2+1.9%"
     },
     {
       "model": "RTX 5090",
@@ -92,12 +97,13 @@
       "min_usd_per_hr": 0.213,
       "offers": 11,
       "dlperf_per_dollar": 481,
-      "change_44d_pct_text": "\u25b2+22.9%",
       "change_direction": "up",
       "history_first_date": "2026-08-08",
       "history_first_median_usd_per_hr": 0.337,
       "history_last_date": "2026-09-21",
-      "history_last_median_usd_per_hr": 0.414
+      "history_last_median_usd_per_hr": 0.414,
+      "days_observed": 44,
+      "change_since_first_observation_pct_text": "\u25b2+22.9%"
     },
     {
       "model": "RTX 6000Ada",
@@ -105,12 +111,13 @@
       "min_usd_per_hr": 0.342,
       "offers": 3,
       "dlperf_per_dollar": 330,
-      "change_44d_pct_text": "new",
       "change_direction": "dim",
       "history_first_date": null,
       "history_first_median_usd_per_hr": null,
       "history_last_date": null,
-      "history_last_median_usd_per_hr": null
+      "history_last_median_usd_per_hr": null,
+      "days_observed": null,
+      "change_since_first_observation_pct_text": "new"
     },
     {
       "model": "RTX PRO 4500",
@@ -118,12 +125,13 @@
       "min_usd_per_hr": 0.336,
       "offers": 1,
       "dlperf_per_dollar": 287,
-      "change_44d_pct_text": "\u25bc0.0%",
-      "change_direction": "down",
+      "change_direction": "flat",
       "history_first_date": "2026-08-10",
       "history_first_median_usd_per_hr": 0.336,
       "history_last_date": "2026-09-21",
-      "history_last_median_usd_per_hr": 0.336
+      "history_last_median_usd_per_hr": 0.336,
+      "days_observed": 42,
+      "change_since_first_observation_pct_text": "\u2014 0.0%"
     },
     {
       "model": "A100 PCIE",
@@ -131,12 +139,13 @@
       "min_usd_per_hr": 0.268,
       "offers": 1,
       "dlperf_per_dollar": 322,
-      "change_44d_pct_text": "\u25bc0.0%",
-      "change_direction": "down",
+      "change_direction": "flat",
       "history_first_date": "2026-08-15",
       "history_first_median_usd_per_hr": 0.268,
       "history_last_date": "2026-09-21",
-      "history_last_median_usd_per_hr": 0.268
+      "history_last_median_usd_per_hr": 0.268,
+      "days_observed": 37,
+      "change_since_first_observation_pct_text": "\u2014 0.0%"
     },
     {
       "model": "RTX PRO 4000",
@@ -144,12 +153,13 @@
       "min_usd_per_hr": 0.146,
       "offers": 1,
       "dlperf_per_dollar": 900,
-      "change_44d_pct_text": "\u25bc32.1%",
       "change_direction": "down",
       "history_first_date": "2026-09-12",
       "history_first_median_usd_per_hr": 0.215,
       "history_last_date": "2026-09-21",
-      "history_last_median_usd_per_hr": 0.146
+      "history_last_median_usd_per_hr": 0.146,
+      "days_observed": 9,
+      "change_since_first_observation_pct_text": "\u25bc32.1%"
     },
     {
       "model": "RTX 5080",
@@ -157,12 +167,13 @@
       "min_usd_per_hr": 0.134,
       "offers": 3,
       "dlperf_per_dollar": 621,
-      "change_44d_pct_text": "\u25b2+0.5%",
       "change_direction": "up",
       "history_first_date": "2026-08-08",
       "history_first_median_usd_per_hr": 0.134,
       "history_last_date": "2026-09-21",
-      "history_last_median_usd_per_hr": 0.135
+      "history_last_median_usd_per_hr": 0.135,
+      "days_observed": 44,
+      "change_since_first_observation_pct_text": "\u25b2+0.5%"
     },
     {
       "model": "RTX 4090",
@@ -170,12 +181,13 @@
       "min_usd_per_hr": 0.121,
       "offers": 3,
       "dlperf_per_dollar": 664,
-      "change_44d_pct_text": "\u25bc33.1%",
       "change_direction": "down",
       "history_first_date": "2026-08-08",
       "history_first_median_usd_per_hr": 0.182,
       "history_last_date": "2026-09-21",
-      "history_last_median_usd_per_hr": 0.121
+      "history_last_median_usd_per_hr": 0.121,
+      "days_observed": 44,
+      "change_since_first_observation_pct_text": "\u25bc33.1%"
     },
     {
       "model": "RTX 5070 Ti",
@@ -183,12 +195,13 @@
       "min_usd_per_hr": 0.108,
       "offers": 3,
       "dlperf_per_dollar": 697,
-      "change_44d_pct_text": "\u25bc9.8%",
       "change_direction": "down",
       "history_first_date": "2026-08-08",
       "history_first_median_usd_per_hr": 0.121,
       "history_last_date": "2026-09-21",
-      "history_last_median_usd_per_hr": 0.109
+      "history_last_median_usd_per_hr": 0.109,
+      "days_observed": 44,
+      "change_since_first_observation_pct_text": "\u25bc9.8%"
     },
     {
       "model": "RTX 4090D",
@@ -196,12 +209,13 @@
       "min_usd_per_hr": 0.107,
       "offers": 4,
       "dlperf_per_dollar": 2243,
-      "change_44d_pct_text": "\u25bc33.3%",
       "change_direction": "down",
       "history_first_date": "2026-08-10",
       "history_first_median_usd_per_hr": 0.161,
       "history_last_date": "2026-09-21",
-      "history_last_median_usd_per_hr": 0.107
+      "history_last_median_usd_per_hr": 0.107,
+      "days_observed": 42,
+      "change_since_first_observation_pct_text": "\u25bc33.3%"
     },
     {
       "model": "RTX 5070",
@@ -209,12 +223,13 @@
       "min_usd_per_hr": 0.067,
       "offers": 2,
       "dlperf_per_dollar": 839,
-      "change_44d_pct_text": "\u25bc11.2%",
       "change_direction": "down",
       "history_first_date": "2026-08-08",
       "history_first_median_usd_per_hr": 0.099,
       "history_last_date": "2026-09-21",
-      "history_last_median_usd_per_hr": 0.088
+      "history_last_median_usd_per_hr": 0.088,
+      "days_observed": 44,
+      "change_since_first_observation_pct_text": "\u25bc11.2%"
     },
     {
       "model": "RTX 5060 Ti",
@@ -222,12 +237,13 @@
       "min_usd_per_hr": 0.054,
       "offers": 4,
       "dlperf_per_dollar": 1018,
-      "change_44d_pct_text": "\u25bc12.9%",
       "change_direction": "down",
       "history_first_date": "2026-08-08",
       "history_first_median_usd_per_hr": 0.066,
       "history_last_date": "2026-09-21",
-      "history_last_median_usd_per_hr": 0.057
+      "history_last_median_usd_per_hr": 0.057,
+      "days_observed": 44,
+      "change_since_first_observation_pct_text": "\u25bc12.9%"
     },
     {
       "model": "Tesla V100",
@@ -235,12 +251,19 @@
       "min_usd_per_hr": 0.027,
       "offers": 9,
       "dlperf_per_dollar": 1851,
-      "change_44d_pct_text": "\u25b2+2.6%",
       "change_direction": "up",
       "history_first_date": "2026-08-08",
       "history_first_median_usd_per_hr": 0.027,
       "history_last_date": "2026-09-21",
-      "history_last_median_usd_per_hr": 0.028
+      "history_last_median_usd_per_hr": 0.028,
+      "days_observed": 44,
+      "change_since_first_observation_pct_text": "\u25b2+2.6%"
     }
-  ]
+  ],
+  "capture_window_days": 44,
+  "source_scope": "Vast.ai on-demand marketplace listings only",
+  "price_label": "listed offer $/hr",
+  "normalization_status": "Not normalized to a common GPU count or storage configuration in this public export. Do not read these figures as a cross-provider or all-in GPU-hour benchmark.",
+  "reproducibility_status": "This public export contains rounded per-model summary values, not raw offer records or the private tracker query. It supports directional reading but cannot independently reproduce every displayed change.",
+  "thin_market_threshold_offers": 5
 }

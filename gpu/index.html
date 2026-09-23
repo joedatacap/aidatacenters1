@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>GPU Price Index — aidc.datacap.xyz</title>
-<meta name="description" content="A public snapshot of GPU rental prices from Vast.ai's public offers API — median and minimum $/hr per model, with 44-day trend.">
+<meta name="description" content="A hand-refreshed snapshot of Vast.ai on-demand listings: median and minimum listed offer $/hr per model, with change since first observation.">
 <style>
   :root {
     --bg: #0a0e14;
@@ -59,6 +59,7 @@
   .card li b { color: var(--ink); }
 
   .tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; -webkit-overflow-scrolling: touch; }
+  .scroll-hint { display: none; color: var(--muted); font-size: .78rem; margin: 0 0 .45rem; }
   table { width: 100%; border-collapse: collapse; background: var(--surface); font-size: .87rem; min-width: 620px; }
   th { background: var(--surface-2); text-align: right; padding: .7rem .9rem; font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); border-bottom: 1px solid var(--line); }
   th:first-child, td:first-child { text-align: left; }
@@ -66,7 +67,11 @@
   td.model { font-weight: 600; text-align: left; }
   .up { color: var(--up); }
   .down { color: var(--down); }
+  .flat { color: var(--muted); }
   .dim { color: var(--muted); }
+  .thin { color: #fde68a; font-size: .75rem; font-weight: 700; }
+  .freshness { display: inline-block; margin-top: .65rem; padding: .28rem .55rem; border: 1px solid rgba(52,211,153,.35); border-radius: 999px; color: #a7f3d0; font-size: .76rem; }
+  .freshness.stale { border-color: rgba(251,113,133,.45); color: #fecdd3; }
 
   .method p { margin: 0 0 .9rem; color: var(--muted); font-size: .89rem; }
   .method p:last-child { margin-bottom: 0; }
@@ -95,8 +100,11 @@
     border-top: 1px solid var(--line);
   }
 
-  @media (max-width: 600px) {
+  @media (max-width: 660px) {
     header.top h1 { font-size: 1.5rem; }
+    .scroll-hint { display: block; color: #bae6fd; }
+    .scroll-hint::after { content: "  →"; color: var(--accent); font-weight: 700; }
+    .tbl-wrap { border-right: 3px solid var(--accent); }
   }
 </style>
 </head>
@@ -105,38 +113,40 @@
 <header class="top">
   <div class="wrap">
     <h1>GPU Price Index</h1>
-    <p class="tag">A public, hand-refreshed snapshot of GPU rental prices — median and minimum $/hr per model, plus 44-day price trend and a rough compute-value score, drawn from Vast.ai's public on-demand marketplace offers.</p>
-    <div class="meta">Snapshot: <b>2026-09-21 10:00 UTC</b> · source: <b>Vast.ai</b> (public offers API) · window: <b>44 days</b> (2026-08-08 → 2026-09-21) · source of record: <a href="data.json">data.json</a></div>
+    <p class="tag">A hand-refreshed snapshot of Vast.ai on-demand listings. Indicative asking rates, not transacted prices or an all-market benchmark.</p>
+    <div class="meta">Snapshot: <b>2026-09-21 10:00 UTC</b> · provider: <b>Vast.ai</b> marketplace offers · capture window: <b>44 days</b> (2026-08-08 to 2026-09-21) · <a href="data.json">data export and methodology</a></div>
+    <div id="freshness" class="freshness" data-snapshot="2026-09-21T10:00:00Z">Checking snapshot age…</div>
   </div>
 </header>
 
 <div class="wrap">
 
-  <h2><span class="sub">Selected, not exhaustive</span>Median $/hr by GPU model</h2>
+  <h2><span class="sub">Selected, not exhaustive</span>Median listed offer $/hr by GPU model</h2>
+  <p class="scroll-hint">Swipe the table horizontally to view all columns.</p>
   <div class="tbl-wrap">
     <table>
       <thead>
-        <tr><th>Model</th><th>Δ 44d</th><th>Offers</th><th>Median $/hr</th><th>Min $/hr</th><th>dlperf/$</th></tr>
+        <tr><th>Model</th><th>Change since first observation</th><th>Days observed</th><th>Offers</th><th>Median listed offer $/hr</th><th>Min listed offer $/hr</th><th>dlperf/$</th></tr>
       </thead>
       <tbody>
-        <tr><td class="model">H200</td><td class="up">▲+0.0%</td><td>2</td><td>$2.964</td><td>$2.633</td><td>147</td></tr>
-        <tr><td class="model">H100 NVL</td><td class="up">▲+64.0%</td><td>2</td><td>$2.189</td><td>$1.976</td><td>174</td></tr>
-        <tr><td class="model">H100 SXM</td><td class="down">▼0.0%</td><td>2</td><td>$1.468</td><td>$1.468</td><td>361</td></tr>
-        <tr><td class="model">RTX PRO 6000 S</td><td class="up">▲+5.6%</td><td>4</td><td>$1.270</td><td>$1.134</td><td>337</td></tr>
-        <tr><td class="model">RTX PRO 6000 Max-Q</td><td class="down">▼7.6%</td><td>4</td><td>$1.086</td><td>$0.801</td><td>350</td></tr>
-        <tr><td class="model">RTX PRO 5000</td><td class="up">▲+1.9%</td><td>1</td><td>$0.670</td><td>$0.670</td><td>284</td></tr>
-        <tr><td class="model">RTX 5090</td><td class="up">▲+22.9%</td><td>11</td><td>$0.414</td><td>$0.213</td><td>481</td></tr>
-        <tr><td class="model">RTX 6000Ada</td><td class="dim">new</td><td>3</td><td>$0.344</td><td>$0.342</td><td>330</td></tr>
-        <tr><td class="model">RTX PRO 4500</td><td class="down">▼0.0%</td><td>1</td><td>$0.336</td><td>$0.336</td><td>287</td></tr>
-        <tr><td class="model">A100 PCIE</td><td class="down">▼0.0%</td><td>1</td><td>$0.268</td><td>$0.268</td><td>322</td></tr>
-        <tr><td class="model">RTX PRO 4000</td><td class="down">▼32.1%</td><td>1</td><td>$0.146</td><td>$0.146</td><td>900</td></tr>
-        <tr><td class="model">RTX 5080</td><td class="up">▲+0.5%</td><td>3</td><td>$0.135</td><td>$0.134</td><td>621</td></tr>
-        <tr><td class="model">RTX 4090</td><td class="down">▼33.1%</td><td>3</td><td>$0.121</td><td>$0.121</td><td>664</td></tr>
-        <tr><td class="model">RTX 5070 Ti</td><td class="down">▼9.8%</td><td>3</td><td>$0.109</td><td>$0.108</td><td>697</td></tr>
-        <tr><td class="model">RTX 4090D</td><td class="down">▼33.3%</td><td>4</td><td>$0.107</td><td>$0.107</td><td>2,243</td></tr>
-        <tr><td class="model">RTX 5070</td><td class="down">▼11.2%</td><td>2</td><td>$0.088</td><td>$0.067</td><td>839</td></tr>
-        <tr><td class="model">RTX 5060 Ti</td><td class="down">▼12.9%</td><td>4</td><td>$0.057</td><td>$0.054</td><td>1,018</td></tr>
-        <tr><td class="model">Tesla V100</td><td class="up">▲+2.6%</td><td>9</td><td>$0.028</td><td>$0.027</td><td>1,851</td></tr>
+        <tr><td class="model">H200</td><td class="flat">0.0%</td><td>34</td><td>2 <span class="thin">thin</span></td><td>$2.964</td><td>$2.633</td><td>147</td></tr>
+        <tr><td class="model">H100 NVL</td><td class="up">▲+64.0%</td><td>44</td><td>2 <span class="thin">thin</span></td><td>$2.189</td><td>$1.976</td><td>174</td></tr>
+        <tr><td class="model">H100 SXM</td><td class="flat">0.0%</td><td>44</td><td>2 <span class="thin">thin</span></td><td>$1.468</td><td>$1.468</td><td>361</td></tr>
+        <tr><td class="model">RTX PRO 6000 S</td><td class="up">▲+5.6%</td><td>44</td><td>4 <span class="thin">thin</span></td><td>$1.270</td><td>$1.134</td><td>337</td></tr>
+        <tr><td class="model">RTX PRO 6000 Max-Q</td><td class="down">▼7.6%</td><td>23</td><td>4 <span class="thin">thin</span></td><td>$1.086</td><td>$0.801</td><td>350</td></tr>
+        <tr><td class="model">RTX PRO 5000</td><td class="up">▲+1.9%</td><td>44</td><td>1 <span class="thin">thin</span></td><td>$0.670</td><td>$0.670</td><td>284</td></tr>
+        <tr><td class="model">RTX 5090</td><td class="up">▲+22.9%</td><td>44</td><td>11</td><td>$0.414</td><td>$0.213</td><td>481</td></tr>
+        <tr><td class="model">RTX 6000Ada</td><td class="dim">new</td><td>n/a</td><td>3 <span class="thin">thin</span></td><td>$0.344</td><td>$0.342</td><td>330</td></tr>
+        <tr><td class="model">RTX PRO 4500</td><td class="flat">0.0%</td><td>42</td><td>1 <span class="thin">thin</span></td><td>$0.336</td><td>$0.336</td><td>287</td></tr>
+        <tr><td class="model">A100 PCIE</td><td class="flat">0.0%</td><td>37</td><td>1 <span class="thin">thin</span></td><td>$0.268</td><td>$0.268</td><td>322</td></tr>
+        <tr><td class="model">RTX PRO 4000</td><td class="down">▼32.1%</td><td>9</td><td>1 <span class="thin">thin</span></td><td>$0.146</td><td>$0.146</td><td>900</td></tr>
+        <tr><td class="model">RTX 5080</td><td class="up">▲+0.5%</td><td>44</td><td>3 <span class="thin">thin</span></td><td>$0.135</td><td>$0.134</td><td>621</td></tr>
+        <tr><td class="model">RTX 4090</td><td class="down">▼33.1%</td><td>44</td><td>3 <span class="thin">thin</span></td><td>$0.121</td><td>$0.121</td><td>664</td></tr>
+        <tr><td class="model">RTX 5070 Ti</td><td class="down">▼9.8%</td><td>44</td><td>3 <span class="thin">thin</span></td><td>$0.109</td><td>$0.108</td><td>697</td></tr>
+        <tr><td class="model">RTX 4090D</td><td class="down">▼33.3%</td><td>42</td><td>4 <span class="thin">thin</span></td><td>$0.107</td><td>$0.107</td><td>2,243</td></tr>
+        <tr><td class="model">RTX 5070</td><td class="down">▼11.2%</td><td>44</td><td>2 <span class="thin">thin</span></td><td>$0.088</td><td>$0.067</td><td>839</td></tr>
+        <tr><td class="model">RTX 5060 Ti</td><td class="down">▼12.9%</td><td>44</td><td>4 <span class="thin">thin</span></td><td>$0.057</td><td>$0.054</td><td>1,018</td></tr>
+        <tr><td class="model">Tesla V100</td><td class="up">▲+2.6%</td><td>44</td><td>9</td><td>$0.028</td><td>$0.027</td><td>1,851</td></tr>
       </tbody>
     </table>
   </div>
@@ -144,32 +154,47 @@
   <h2><span class="sub">The numbers that matter</span>Key takeaways</h2>
   <div class="card">
     <ul>
-      <li><b>H200</b> is the priciest tracked model at <b>$2.964/hr</b> median; <b>Tesla V100</b> is the cheapest at <b>$0.028/hr</b>.</li>
-      <li><b>H100 NVL</b> saw the sharpest price rise over the window, up <b>+64.0%</b> (from $1.335/hr on 2026-08-08 to $2.189/hr on 2026-09-21).</li>
-      <li><b>RTX 4090D</b> fell the most, down <b>-33.3%</b>, and posts the best compute value in this set at <b>2,243 dlperf/$</b>.</li>
-      <li>18 models shown, backed by <b>60 live offers</b> across them at snapshot time; some tiers (single-offer, e.g. A100 PCIE) are thin markets and noisier than the rest.</li>
+      <li>In this selected snapshot, <b>H200</b> has the highest listed-offer median at <b>$2.964/hr</b> (2 offers), while <b>Tesla V100</b> has the lowest at <b>$0.028/hr</b> (9 offers). This describes this sample, not a broad market benchmark.</li>
+      <li>18 models are shown, backed by <b>60 live offers</b> at capture time. <b>16 of 18 rows</b> have fewer than five offers and are explicitly marked thin market.</li>
+      <li>Changes and dlperf/$ are shown for context, but low-sample rows are not used for headline change or value rankings.</li>
     </ul>
   </div>
 
   <h2><span class="sub">How this is built</span>Methodology</h2>
   <div class="card method">
-    <p>Prices are <strong>median asking rents</strong> per GPU-hour on Vast.ai's on-demand market — actual listed offers, not a fixed price list. <strong>Δ 44d</strong> is the percent change in median $/hr from the first to the most recent recorded snapshot for that model in the tracked window; <strong>new</strong> means only one snapshot exists so far, so no comparison is possible.</p>
-    <p><strong>dlperf/$</strong> is Vast.ai's own deep-learning-performance score divided by price — a higher number means more compute per dollar, not more raw performance.</p>
-    <p>This table shows 18 of 22 tracked models. Four low-signal, single-offer tiers that duplicate an adjacent model's price band (RTX PRO 6000 WS, RTX 4080S, RTX 4070S Ti, RTX 3080 Ti) were left out to keep the table readable; their data still exists upstream. Vast.ai itself already excludes very low offer counts from its own reporting for statistical sanity.</p>
+    <p>Prices are <strong>median listed offer rates</strong> from Vast.ai's on-demand marketplace, not transaction prices or a fixed price list. The published export does not contain enough raw configuration to normalize different GPU counts or storage configurations, so the unit is labelled listed offer $/hr rather than per-GPU hour.</p>
+    <p><strong>Change since first observation</strong> is the percent change from a model's first recorded median to this snapshot. <strong>Days observed</strong> makes the comparison window explicit; <strong>new</strong> means only one snapshot exists so far.</p>
+    <p><strong>dlperf/$</strong> is Vast.ai's own deep-learning-performance score divided by price. It is a vendor workload score, not a universal measure of raw performance or application-specific value.</p>
+    <p>This table shows 18 of 22 tracked models. Four single-offer tiers that duplicate an adjacent price band (RTX PRO 6000 WS, RTX 4080S, RTX 4070S Ti, RTX 3080 Ti) are omitted for readability. Any row below five offers is labelled thin market and excluded from headline rankings.</p>
   </div>
 
   <h2><span class="sub">Read before you cite</span>Limitations</h2>
   <div class="limits">
-    <b>This is a manually captured snapshot, not a live feed.</b> It reflects one point in time (2026-09-21 10:00 UTC) pulled from a private internal tracker and republished here by hand — there is no automated refresh in this public repository. Several models trade on very thin markets (as few as 1-2 live offers), so their median/min prices can be noisy and unrepresentative of a deeper market. Vast.ai is one marketplace among several (Lambda, RunPod, CoreWeave, etc.) and its prices should not be read as the market-clearing rate everywhere.
+    <b>This is a manually captured snapshot, not a live feed.</b> The freshness badge becomes stale after 24 hours. This public export contains rounded model-level summaries, not raw offer records or the private tracker query, so it cannot independently reproduce every change value. Several models trade on thin markets, so their medians can be noisy. Vast.ai is one marketplace among several and should not be read as the market-clearing rate everywhere.
   </div>
 
   <div class="foot">
-    Data: Vast.ai public offers API · snapshot 2026-09-21 10:00 UTC · source of record: <a href="data.json">data.json</a>
+    Data: Vast.ai marketplace-offer export · snapshot 2026-09-21 10:00 UTC · <a href="https://docs.vast.ai/api-reference/search/search-offers">Vast offer API documentation</a> · <a href="data.json">data export</a>
   </div>
 
   <a class="back" href="/">← back to aidc.datacap.xyz</a>
 
 </div>
+
+<script>
+  (function () {
+    const badge = document.getElementById('freshness');
+    const captured = Date.parse(badge.dataset.snapshot);
+    const hours = (Date.now() - captured) / 3600000;
+    if (!Number.isFinite(hours)) return;
+    if (hours > 24) {
+      badge.classList.add('stale');
+      badge.textContent = `Stale snapshot: captured ${Math.floor(hours / 24)}d ago. Check the timestamp before citing.`;
+    } else {
+      badge.textContent = `Snapshot age: ${Math.max(0, Math.floor(hours))}h. Freshness threshold: 24h.`;
+    }
+  }());
+</script>
 
 </body>
 </html>
