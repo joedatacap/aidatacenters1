@@ -49,39 +49,59 @@ There's no automation — this is a manual, monthly pass:
    selection, and the receipts list, and bump the `updated` date in both files.
 5. Commit and push — GitHub Pages redeploys automatically.
 
-## GPU Price Index (`/gpu/`)
+## GPU Rental Market Monitor (`/gpu/`)
 
-A second, independent page: a static snapshot of Vast.ai on-demand listings at
-**aidc.datacap.xyz/gpu/**.
+A public, static comparison of provider-attributed GPU rental price levels at
+**aidc.datacap.xyz/gpu/**. It is a market monitor, not a blended price index
+and not a booking or cheapest-price tool.
 
-- `gpu/data.json` records listed-offer median/minimum $/hr, offer count, days
-  observed, and change since first observation. It also carries explicit
-  normalization, reproducibility, and thin-market limits.
-- `gpu/index.html` is a standalone static page. A small local script only
-  calculates the visible freshness badge; it makes no provider fetch.
-- `gpu/validate.py` checks JSON validity, table/data correspondence, 18 records,
-  60 offers, the 16 thin-market rows, HTML nesting, and the current methodology
-  claims. Run it before every publish.
+### Sources and scope
 
-**Refresh is manual, not automated.** The underlying snapshot is derived from a
-private internal tracker; this repo holds a public-safe export. There is no
-script or CI job that pulls fresh provider data. To refresh:
+- **Vast.ai:** public on-demand, verified, rentable, non-rented single-GPU
+  marketplace offers. The page shows median listed offer rates, counts, and
+  thin-market flags. It is not a transaction-price feed.
+- **RunPod:** public Pods pricing only, with Community Pod and Secure Pod
+  published separately. Serverless and Clusters are excluded.
+- **Lambda:** public self-serve Instances pricing. The currently captured
+  entries are per-GPU rates inside an 8x bundle, so they remain provider-native
+  context rather than direct single-GPU comparables.
 
-1. Re-derive the latest values from the private source and retain a normalized,
-   append-only raw offer snapshot outside this public repo when possible.
-2. Update `gpu/data.json` with the new records, exact observation dates, source
-   metadata, and the current normalization/reproducibility statement.
-3. Update `gpu/index.html` so its table, takeaways, snapshot timestamp, and
-   `data-snapshot` freshness attribute match the export.
-4. Run `python3 gpu/validate.py` from the repository root, then commit and push
-   the changed files together.
+`gpu/data.json` is the public source-of-record export. It contains per-source
+capture metadata, source URLs, product labels, eligibility rules, the six-GPU
+comparison cohort, and the prior Vast-only historical table. `gpu/index.html`
+is a standalone static renderer with no provider fetch. `gpu/validate.py`
+checks the source schema, exact rendered values, thin-market/bundle exclusions,
+source links, no-blended-language rule, and HTML nesting.
 
-**Second-provider policy.** Do not blend Vast.ai marketplace offers with a
-fixed-price provider into one median. If a second source is added, publish a
-separate, clearly labelled provider panel with its own source URL, configuration,
-price unit, capture time, and comparable GPU cohort. Start with a small RunPod
-on-demand reference set only after its data contract is documented and
-reproducible.
+### Reading the matrix
+
+The `Comparable price band` is the low-to-high range of eligible rates in one
+GPU row. It never averages or pools provider prices. Vast rows with fewer than
+five offers and Lambda 8x bundle rows are visible but excluded from this band.
+Each rate retains a source product label, so Community Pod, Secure Pod,
+marketplace offer, and bundled instance cannot silently become equivalent.
+
+### Refresh policy
+
+Refresh manually monthly and out of cycle when any material source change occurs:
+
+- a listed rate moves 10% or more;
+- a GPU model or product tier is added or removed;
+- an availability or billing-minimum rule changes; or
+- a source correction is found.
+
+Use a staging capture before publishing: collect source records, update
+`gpu/data.json`, run `python3 gpu/validate.py`, inspect the static page on
+desktop and mobile, then commit the changed data and renderer together. Keep
+the prior valid export if a source becomes unavailable or its format changes.
+
+### Future automation
+
+Do not automate page scraping until the manual contract has survived several
+clean refreshes. A future source job should write staging JSON, validate it
+against this schema, preserve the last-good public export on failure, and flag
+each provider stale independently. The page remains a stateless renderer, never
+the source of research.
 
 ## Stage map (`/`)
 
