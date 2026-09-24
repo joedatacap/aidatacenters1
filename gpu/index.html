@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GPU Price Index — aidc.datacap.xyz</title>
-<meta name="description" content="A hand-refreshed snapshot of Vast.ai on-demand listings: median and minimum listed offer $/hr per model, with change since first observation.">
+<title>GPU Rental Market Monitor — aidc.datacap.xyz</title>
+<meta name="description" content="A provider-attributed GPU rental price snapshot across Vast.ai, RunPod, and Lambda — shown side by side, never pooled into one number.">
 <style>
   :root {
     --bg: #0a0e14;
@@ -26,7 +26,7 @@
     line-height: 1.55;
   }
   a { color: var(--accent); }
-  .wrap { max-width: 960px; margin: 0 auto; padding: 0 1.25rem 4rem; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 1.25rem 4rem; }
   header.top {
     background: linear-gradient(180deg, #10151d, var(--bg));
     border-bottom: 1px solid var(--line);
@@ -34,7 +34,7 @@
   }
   header.top .wrap { padding: 0; }
   header.top h1 { margin: 0 0 .5rem; font-size: 1.9rem; letter-spacing: -0.01em; }
-  header.top p.tag { margin: 0; color: var(--muted); max-width: 700px; font-size: 1rem; }
+  header.top p.tag { margin: 0; color: var(--muted); max-width: 760px; font-size: 1rem; }
   .meta {
     color: var(--muted);
     font-size: .82rem;
@@ -44,8 +44,13 @@
   .meta a { color: var(--accent); text-decoration: none; }
   .meta a:hover { text-decoration: underline; }
 
+  .badges { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .9rem; }
+  .freshness { display: inline-block; padding: .28rem .6rem; border: 1px solid rgba(52,211,153,.35); border-radius: 999px; color: #a7f3d0; font-size: .76rem; }
+  .freshness.stale { border-color: rgba(251,113,133,.45); color: #fecdd3; }
+
   h2 { font-size: 1.25rem; margin: 2.5rem 0 1rem; letter-spacing: -0.005em; }
   h2 .sub { display: block; font-size: .78rem; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); font-weight: 600; margin-bottom: .3rem; }
+  h3.section-note { font-size: .9rem; color: var(--muted); font-weight: 400; margin: -.6rem 0 1.1rem; }
 
   .card {
     background: var(--surface);
@@ -57,21 +62,40 @@
   .card ul { margin: 0; padding-left: 1.2rem; }
   .card li { margin: .3rem 0; font-size: .89rem; color: var(--muted); }
   .card li b { color: var(--ink); }
+  .card p { margin: 0 0 .7rem; font-size: .89rem; color: var(--muted); }
+  .card p:last-child { margin-bottom: 0; }
+
+  .cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  @media (max-width: 900px) { .cards-grid { grid-template-columns: 1fr; } }
+
+  .provider-card h3 { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
+  .provider-card h3 a { font-size: .78rem; font-weight: 500; text-decoration: none; }
+  .provider-card h3 a:hover { text-decoration: underline; }
+  .provider-kind { display: block; font-size: .74rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin: -.3rem 0 .8rem; }
+  .mini-tbl { width: 100%; border-collapse: collapse; font-size: .78rem; margin: .6rem 0; }
+  .mini-tbl th { text-align: right; color: var(--muted); font-weight: 600; padding: .3rem .4rem; border-bottom: 1px solid var(--line); }
+  .mini-tbl th:first-child, .mini-tbl td:first-child { text-align: left; }
+  .mini-tbl td { text-align: right; padding: .3rem .4rem; border-top: 1px solid var(--line); font-variant-numeric: tabular-nums; }
 
   .tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; -webkit-overflow-scrolling: touch; }
   .scroll-hint { display: none; color: var(--muted); font-size: .78rem; margin: 0 0 .45rem; }
-  table { width: 100%; border-collapse: collapse; background: var(--surface); font-size: .87rem; min-width: 620px; }
+  table { width: 100%; border-collapse: collapse; background: var(--surface); font-size: .87rem; }
+  #comparable-table table { min-width: 900px; }
+  #historical-table table { min-width: 620px; }
   th { background: var(--surface-2); text-align: right; padding: .7rem .9rem; font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); border-bottom: 1px solid var(--line); }
   th:first-child, td:first-child { text-align: left; }
   td { padding: .65rem .9rem; border-top: 1px solid var(--line); text-align: right; font-variant-numeric: tabular-nums; }
   td.model { font-weight: 600; text-align: left; }
+  td.band, th.band-head { font-weight: 700; color: #dbeafe; background: rgba(91,157,255,.09); border-left: 1px solid rgba(91,157,255,.32); border-right: 1px solid rgba(91,157,255,.32); }
   .up { color: var(--up); }
   .down { color: var(--down); }
   .flat { color: var(--muted); }
   .dim { color: var(--muted); }
-  .thin { color: #fde68a; font-size: .75rem; font-weight: 700; }
-  .freshness { display: inline-block; margin-top: .65rem; padding: .28rem .55rem; border: 1px solid rgba(52,211,153,.35); border-radius: 999px; color: #a7f3d0; font-size: .76rem; }
-  .freshness.stale { border-color: rgba(251,113,133,.45); color: #fecdd3; }
+  .thin, .thin-badge { color: #fef08a; font-size: .75rem; font-weight: 700; display: block; margin-top: .15rem; }
+  .bundle-badge { color: #93c5fd; font-size: .75rem; font-weight: 700; display: block; margin-top: .15rem; }
+  .na-badge { color: var(--muted); font-size: .75rem; font-weight: 700; display: block; margin-top: .15rem; }
+  .rate-main { display: block; }
+  .table-asof { color: var(--muted); font-size: .76rem; padding: .55rem .8rem; background: var(--surface-2); border-top: 1px solid var(--line); }
 
   .method p { margin: 0 0 .9rem; color: var(--muted); font-size: .89rem; }
   .method p:last-child { margin-bottom: 0; }
@@ -100,11 +124,16 @@
     border-top: 1px solid var(--line);
   }
 
+  .demoted-heading { display: flex; align-items: baseline; gap: .6rem; flex-wrap: wrap; }
+  .demoted-heading .tagline { font-size: .78rem; color: var(--muted); font-weight: 400; }
+
   @media (max-width: 660px) {
     header.top h1 { font-size: 1.5rem; }
-    .scroll-hint { display: block; color: #bae6fd; }
+    .scroll-hint { display: block; color: #bae6fd; font-weight: 600; }
     .scroll-hint::after { content: "  →"; color: var(--accent); font-weight: 700; }
-    .tbl-wrap { border-right: 3px solid var(--accent); }
+    .tbl-wrap { border-right: 3px solid var(--accent); box-shadow: inset -18px 0 18px -18px rgba(91,157,255,.95); }
+    #comparable-table th:first-child, #comparable-table td:first-child { position: sticky; left: 0; background: var(--surface); box-shadow: 7px 0 12px -10px rgba(0,0,0,.95); z-index: 1; }
+    #comparable-table th:first-child { background: var(--surface-2); z-index: 2; }
   }
 </style>
 </head>
@@ -112,18 +141,167 @@
 
 <header class="top">
   <div class="wrap">
-    <h1>GPU Price Index</h1>
-    <p class="tag">A hand-refreshed snapshot of Vast.ai on-demand listings. Indicative asking rates, not transacted prices or an all-market benchmark.</p>
-    <div class="meta">Snapshot: <b>2026-09-21 10:00 UTC</b> · provider: <b>Vast.ai</b> marketplace offers · capture window: <b>44 days</b> (2026-08-08 to 2026-09-21) · <a href="data.json">data export and methodology</a></div>
-    <div id="freshness" class="freshness" data-snapshot="2026-09-21T10:00:00Z">Checking snapshot age…</div>
+    <h1>GPU Rental Market Monitor</h1>
+    <p class="tag">Provider-attributed GPU rental price levels from three independent sources, shown side by side — never pooled into one number, and not a lookup for the single cheapest GPU.</p>
+    <div class="meta">Sources: <b>Vast.ai</b> (marketplace offers) · <b>RunPod</b> (Pods pricing page) · <b>Lambda</b> (self-serve pricing page) · all captured <b>2026-09-23</b> · <a href="data.json">data export and methodology</a></div>
+    <div class="badges">
+      <div class="freshness" data-provider="Vast.ai" data-capture="2026-09-23T00:00:00Z">Checking Vast.ai capture age…</div>
+      <div class="freshness" data-provider="RunPod" data-capture="2026-09-23T00:00:00Z">Checking RunPod capture age…</div>
+      <div class="freshness" data-provider="Lambda" data-capture="2026-09-23T00:00:00Z">Checking Lambda capture age…</div>
+    </div>
   </div>
 </header>
 
 <div class="wrap">
 
-  <h2><span class="sub">Selected, not exhaustive</span>Median listed offer $/hr by GPU model</h2>
+  <h2><span class="sub">Three sources, one screen</span>Comparable provider snapshot</h2>
+  <h3 class="section-note">Six GPU variants queried on all three sources at once. Each cell names its own source product — a listed marketplace offer is never treated as equal to a fixed-price cloud SKU or an 8× bundle rate. The price band uses only eligible, directly comparable rates; thin-market and bundle rows are shown but excluded from it. No prices are averaged.</h3>
   <p class="scroll-hint">Swipe the table horizontally to view all columns.</p>
-  <div class="tbl-wrap">
+  <div class="tbl-wrap" id="comparable-table">
+    <table>
+      <thead>
+        <tr><th>GPU variant</th><th>Vast.ai median (verified, 1× GPU)</th><th>RunPod Community Pod</th><th>RunPod Secure Pod</th><th>Lambda (8× bundle)</th><th class="band-head">Comparable price band</th><th>Eligible sources</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="model">H200</td>
+          <td><span class="rate-main">$4.90</span><span class="thin-badge">thin market · 2 offers</span></td>
+          <td>$3.59</td>
+          <td>$4.59</td>
+          <td><span class="rate-main">n/a</span><span class="na-badge">not listed by Lambda</span></td>
+          <td class="band">$3.59 – $4.59</td>
+          <td>2</td>
+        </tr>
+        <tr>
+          <td class="model">H100 SXM</td>
+          <td><span class="rate-main">$4.12</span><span class="thin-badge">thin market · 4 offers</span></td>
+          <td>$2.69</td>
+          <td>$3.49</td>
+          <td><span class="rate-main">$3.99</span><span class="bundle-badge">8x bundle</span></td>
+          <td class="band">$2.69 – $3.49</td>
+          <td>2</td>
+        </tr>
+        <tr>
+          <td class="model">H100 NVL</td>
+          <td><span class="rate-main">$2.70</span><span class="thin-badge">thin market · 1 offer</span></td>
+          <td>$2.59</td>
+          <td>$3.19</td>
+          <td><span class="rate-main">n/a</span><span class="na-badge">not listed by Lambda</span></td>
+          <td class="band">$2.59 – $3.19</td>
+          <td>2</td>
+        </tr>
+        <tr>
+          <td class="model">A100 SXM</td>
+          <td><span class="rate-main">n/a</span><span class="na-badge">no verified offer</span></td>
+          <td>$1.39</td>
+          <td>$1.59</td>
+          <td><span class="rate-main">$2.79</span><span class="bundle-badge">8x bundle</span></td>
+          <td class="band">$1.39 – $1.59</td>
+          <td>2</td>
+        </tr>
+        <tr>
+          <td class="model">RTX 5090</td>
+          <td>$0.74</td>
+          <td>$0.69</td>
+          <td>$0.99</td>
+          <td><span class="rate-main">n/a</span><span class="na-badge">not listed by Lambda</span></td>
+          <td class="band">$0.69 – $0.99</td>
+          <td>3</td>
+        </tr>
+        <tr>
+          <td class="model">RTX 4090</td>
+          <td>$0.60</td>
+          <td>$0.34</td>
+          <td>$0.74</td>
+          <td><span class="rate-main">n/a</span><span class="na-badge">not listed by Lambda</span></td>
+          <td class="band">$0.34 – $0.74</td>
+          <td>3</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="table-asof">Data as of 2026-09-23. Each source is captured independently; see source cards and data export for product labels and capture context.</div>
+  </div>
+
+  <h2><span class="sub">Read this before the numbers</span>How to read the snapshot</h2>
+  <div class="card">
+    <ul>
+      <li><b>The price band is a range, not an index.</b> It spans only the eligible comparable rates in that row (fixed-price Pod tiers, plus any Vast row with 5 or more matching offers). Thin-market and 8× bundle rows are never folded into it, and rates are never averaged or pooled across providers.</li>
+      <li><b>Region is source-provided or unknown.</b> None of the three sources publish a normalized region field for these rates in this capture, so treat every row as global/unspecified unless a source states otherwise.</li>
+      <li><b>Vast is a marketplace, not a price list.</b> Its rate is whatever independent hosts have listed at query time — it can swing from a single thin offer to dozens within the same day. RunPod and Lambda publish standing rate cards instead.</li>
+      <li><b>Availability, risk, and billing terms differ by source</b> and are not folded into the price band. See each provider card below for what is (and isn't) known about isolation tier, support, and what the rate includes.</li>
+    </ul>
+  </div>
+
+  <h2><span class="sub">Source by source</span>Provider detail</h2>
+  <div class="cards-grid">
+
+    <div class="card provider-card">
+      <h3>Vast.ai <a href="https://vast.ai/">vast.ai ↗</a></h3>
+      <span class="provider-kind">Peer-to-peer GPU marketplace</span>
+      <ul>
+        <li><b>Query contract:</b> <code>type=on-demand</code>, <code>verified=true</code>, <code>rentable=true</code>, <code>rented=false</code>, <code>num_gpus=1</code>, price field <code>dph_total</code>.</li>
+        <li><b>Sample:</b> 6 variants queried, <b>94 total matching offers</b>, 1 variant with zero offers, 3 variants below the 5-offer thin-market threshold.</li>
+        <li><b>Price type:</b> listed offer $/hr for a single matching instance — not a transacted price.</li>
+        <li><b>Risk:</b> hosted by independent operators; "verified" is Vast's own flag, not an independent audit.</li>
+        <li><b>Availability:</b> global, host-supplied; offer counts ranged 0–51 across the six variants at capture time.</li>
+        <li><b>Billing:</b> per-offer $/hr from Vast's <code>dph_total</code> field; no platform price list. Taxes, storage, and egress are not normalized across this monitor.</li>
+        <li><b>API reference:</b> <a href="https://docs.vast.ai/api-reference/search/search-offers">docs.vast.ai/api-reference/search/search-offers</a></li>
+      </ul>
+    </div>
+
+    <div class="card provider-card">
+      <h3>RunPod <a href="https://www.runpod.io/pricing">runpod.io/pricing ↗</a></h3>
+      <span class="provider-kind">GPU cloud — Pods (Serverless/Clusters excluded)</span>
+      <p>Community and Secure Pods are distinct source products with their own rate, never blended into one cell.</p>
+      <table class="mini-tbl">
+        <thead><tr><th>Model</th><th>Community</th><th>Secure</th></tr></thead>
+        <tbody>
+          <tr><td>H200</td><td>$3.59</td><td>$4.59</td></tr>
+          <tr><td>H100 NVL</td><td>$2.59</td><td>$3.19</td></tr>
+          <tr><td>H100 PCIe</td><td>$1.99</td><td>$2.89</td></tr>
+          <tr><td>H100 SXM</td><td>$2.69</td><td>$3.49</td></tr>
+          <tr><td>A100 PCIe</td><td>$1.19</td><td>$1.59</td></tr>
+          <tr><td>A100 SXM</td><td>$1.39</td><td>$1.59</td></tr>
+          <tr><td>RTX 5090</td><td>$0.69</td><td>$0.99</td></tr>
+          <tr><td>RTX 4090</td><td>$0.34</td><td>$0.74</td></tr>
+        </tbody>
+      </table>
+      <ul>
+        <li><b>Page states:</b> pricing updated 2026-09-13.</li>
+        <li><b>Risk:</b> two source-labelled tiers per RunPod's own page; no additional SLA/compliance claim is verified here.</li>
+        <li><b>Availability:</b> set by RunPod's data-center footprint; not itemized per model in this capture.</li>
+        <li><b>Billing:</b> per-GPU $/hr as published; taxes/storage/egress not normalized.</li>
+      </ul>
+    </div>
+
+    <div class="card provider-card">
+      <h3>Lambda <a href="https://lambda.ai/pricing">lambda.ai/pricing ↗</a></h3>
+      <span class="provider-kind">GPU cloud — self-serve on-demand instances</span>
+      <p>The visible self-serve Instance table defaults to an <b>8× GPU bundle</b>; rates below are per-GPU-hour within that bundle, which also includes CPU, RAM, and storage. Shown as provider-native context, not a confirmed single-GPU match.</p>
+      <table class="mini-tbl">
+        <thead><tr><th>Model</th><th>Per GPU/hr (8x bundle)</th></tr></thead>
+        <tbody>
+          <tr><td>B200 SXM6</td><td>$6.69</td></tr>
+          <tr><td>H100 SXM</td><td>$3.99</td></tr>
+          <tr><td>A100 SXM 80GB</td><td>$2.79</td></tr>
+          <tr><td>A100 SXM40</td><td>$1.99</td></tr>
+          <tr><td>V100</td><td>$0.79</td></tr>
+        </tbody>
+      </table>
+      <ul>
+        <li><b>Page states:</b> rates are plus applicable sales tax/VAT/GST.</li>
+        <li><b>Risk:</b> bundle instance, not an isolated single-GPU SKU — excluded from the comparable price band.</li>
+        <li><b>Availability:</b> instance-type and region dependent; not itemized in this capture.</li>
+        <li><b>Billing:</b> per-GPU-hour rate includes CPU, RAM, and storage in the bundle price.</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <h2 class="demoted-heading"><span class="sub">Vast-only, historical</span>Vast marketplace detail<span class="tagline">44-day trend detail below — not current multi-provider values</span></h2>
+  <h3 class="section-note">This table is the prior single-source Vast.ai snapshot (captured 2026-09-21) with its own trend and thin-market logic, kept for historical continuity. Do not read it as today's cross-provider comparison — see the comparable snapshot above for that.</h3>
+  <p class="scroll-hint">Swipe the table horizontally to view all columns.</p>
+  <div class="tbl-wrap" id="historical-table">
     <table>
       <thead>
         <tr><th>Model</th><th>Change since first observation</th><th>Days observed</th><th>Offers</th><th>Median listed offer $/hr</th><th>Min listed offer $/hr</th><th>dlperf/$</th></tr>
@@ -150,31 +328,25 @@
       </tbody>
     </table>
   </div>
-
-  <h2><span class="sub">The numbers that matter</span>Key takeaways</h2>
-  <div class="card">
-    <ul>
-      <li>In this selected snapshot, <b>H200</b> has the highest listed-offer median at <b>$2.964/hr</b> (2 offers), while <b>Tesla V100</b> has the lowest at <b>$0.028/hr</b> (9 offers). This describes this sample, not a broad market benchmark.</li>
-      <li>18 models are shown, backed by <b>60 live offers</b> at capture time. <b>16 of 18 rows</b> have fewer than five offers and are explicitly marked thin market.</li>
-      <li>Changes and dlperf/$ are shown for context, but low-sample rows are not used for headline change or value rankings.</li>
-    </ul>
-  </div>
-
-  <h2><span class="sub">How this is built</span>Methodology</h2>
   <div class="card method">
-    <p>Prices are <strong>median listed offer rates</strong> from Vast.ai's on-demand marketplace, not transaction prices or a fixed price list. The published export does not contain enough raw configuration to normalize different GPU counts or storage configurations, so the unit is labelled listed offer $/hr rather than per-GPU hour.</p>
-    <p><strong>Change since first observation</strong> is the percent change from a model's first recorded median to this snapshot. <strong>Days observed</strong> makes the comparison window explicit; <strong>new</strong> means only one snapshot exists so far.</p>
-    <p><strong>dlperf/$</strong> is Vast.ai's own deep-learning-performance score divided by price. It is a vendor workload score, not a universal measure of raw performance or application-specific value.</p>
-    <p>This table shows 18 of 22 tracked models. Four single-offer tiers that duplicate an adjacent price band (RTX PRO 6000 WS, RTX 4080S, RTX 4070S Ti, RTX 3080 Ti) are omitted for readability. Any row below five offers is labelled thin market and excluded from headline rankings.</p>
+    <p>This detail table shows 18 of 22 tracked Vast.ai models from the 2026-09-21 capture. Four single-offer tiers that duplicate an adjacent price band (RTX PRO 6000 WS, RTX 4080S, RTX 4070S Ti, RTX 3080 Ti) are omitted for readability. Any row below five offers is labelled thin market and excluded from headline rankings. <strong>dlperf/$</strong> is Vast.ai's own deep-learning-performance score divided by price — a vendor workload score, not a universal performance measure.</p>
   </div>
 
-  <h2><span class="sub">Read before you cite</span>Limitations</h2>
+  <h2><span class="sub">How this is built</span>Methodology / limitations</h2>
+  <div class="card method">
+    <p>All rates shown are <strong>listed, source-specific prices</strong> — not transaction prices, and not a single settled rate for any GPU model. Vast's rate is a live marketplace offer; RunPod's and Lambda's are published rate-card prices. These are different kinds of numbers and are never pooled into a single figure.</p>
+    <p><strong>Product tiers and configurations are not equal.</strong> Vast's row is a single verified 1× GPU instance from an independent host; RunPod's Community and Secure Pods are two distinct fixed-price products; Lambda's rate is a per-GPU price inside an 8× bundle that also includes CPU, RAM, and storage. Treat every cross-source comparison as directional, not exact.</p>
+    <p><strong>Region is global/unknown unless a source states otherwise.</strong> None of the three captures in this snapshot carry a normalized per-row region field.</p>
+    <p><strong>No taxes, storage, or egress are normalized</strong> into any rate. Lambda explicitly states its rates are plus applicable sales tax/VAT/GST; RunPod and Vast do not itemize taxes or egress in the captured price field.</p>
+    <p><strong>Source prices may change</strong> at any time, and <strong>each source has its own independent capture time</strong> — see the freshness badges above and the per-provider capture date in <a href="data.json">data.json</a>. This page does not restate any source's terms-of-service, SLA, or compliance claims beyond what each pricing page itself publishes.</p>
+  </div>
+
   <div class="limits">
-    <b>This is a manually captured snapshot, not a live feed.</b> The freshness badge becomes stale after 24 hours. This public export contains rounded model-level summaries, not raw offer records or the private tracker query, so it cannot independently reproduce every change value. Several models trade on thin markets, so their medians can be noisy. Vast.ai is one marketplace among several and should not be read as the market-clearing rate everywhere.
+    <b>This is a manually captured snapshot, not a live feed.</b> Freshness badges flag a capture as stale past 40 days. This is a provider price-level monitor, not a blended market index and not a cheapest-GPU finder — always check the per-row product label and eligibility before citing a number.
   </div>
 
   <div class="foot">
-    Data: Vast.ai marketplace-offer export · snapshot 2026-09-21 10:00 UTC · <a href="https://docs.vast.ai/api-reference/search/search-offers">Vast offer API documentation</a> · <a href="data.json">data export</a>
+    Data: Vast.ai marketplace offers · RunPod Pods pricing · Lambda self-serve pricing · captured 2026-09-23 · <a href="data.json">data export</a> · <a href="https://vast.ai/">Vast.ai</a> · <a href="https://www.runpod.io/pricing">RunPod pricing</a> · <a href="https://lambda.ai/pricing">Lambda pricing</a>
   </div>
 
   <a class="back" href="/">← back to aidc.datacap.xyz</a>
@@ -183,16 +355,19 @@
 
 <script>
   (function () {
-    const badge = document.getElementById('freshness');
-    const captured = Date.parse(badge.dataset.snapshot);
-    const hours = (Date.now() - captured) / 3600000;
-    if (!Number.isFinite(hours)) return;
-    if (hours > 24) {
-      badge.classList.add('stale');
-      badge.textContent = `Stale snapshot: captured ${Math.floor(hours / 24)}d ago. Check the timestamp before citing.`;
-    } else {
-      badge.textContent = `Snapshot age: ${Math.max(0, Math.floor(hours))}h. Freshness threshold: 24h.`;
-    }
+    const THRESHOLD_DAYS = 40;
+    document.querySelectorAll('.freshness[data-capture]').forEach(function (badge) {
+      const provider = badge.dataset.provider;
+      const captured = Date.parse(badge.dataset.capture);
+      const days = (Date.now() - captured) / 86400000;
+      if (!Number.isFinite(days)) return;
+      if (days > THRESHOLD_DAYS) {
+        badge.classList.add('stale');
+        badge.textContent = provider + ': stale capture, ' + Math.floor(days) + 'd old. Check the timestamp before citing.';
+      } else {
+        badge.textContent = provider + ': captured ' + Math.max(0, Math.floor(days)) + 'd ago. Freshness threshold ' + THRESHOLD_DAYS + 'd.';
+      }
+    });
   }());
 </script>
 
